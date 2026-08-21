@@ -1,1 +1,10 @@
+# macOS
+.DS_Store
+
+# Eclipse IDE
 .metadata/
+intern-hub/.DS_Store
+intern-hub/target/
+intern-hub/.classpath
+intern-hub/.settings
+intern-hub/.project

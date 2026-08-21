@@ -48,7 +48,7 @@ create table cv (
     image mediumblob,
     interests varchar(150),
     address varchar(80), 
-	constraint RK_cv_student
+	constraint FK_cv_student
     foreign key (studentId)
     references student(studentId)
 );

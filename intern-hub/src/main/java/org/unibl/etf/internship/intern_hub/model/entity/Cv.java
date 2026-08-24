@@ -38,7 +38,7 @@ public class Cv {
 	@ManyToMany
 	@JoinTable(
 			name = "known_technology",
-			joinColumns = @JoinColumn(name = "cv"),
+			joinColumns = @JoinColumn(name = "cvId"),
 			inverseJoinColumns = @JoinColumn(name = "technologyId")
 			)
 	private List<Technology> technologies;

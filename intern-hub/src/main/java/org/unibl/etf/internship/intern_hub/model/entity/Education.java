@@ -28,7 +28,7 @@ public class Education {
 	private LocalDate endDate;
 	
 	@ManyToOne
-	@JoinColumn(name = "cv", nullable = false)
+	@JoinColumn(name = "cvId", nullable = false)
 	private Cv cv;
 	
 }

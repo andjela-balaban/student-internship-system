@@ -3,8 +3,6 @@ package org.unibl.etf.internship.intern_hub.model.dto;
 import lombok.*;
 import java.util.*;
 
-import jakarta.validation.Valid;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

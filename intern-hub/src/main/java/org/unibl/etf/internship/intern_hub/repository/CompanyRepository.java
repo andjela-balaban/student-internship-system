@@ -6,5 +6,5 @@ import org.unibl.etf.internship.intern_hub.model.entity.*;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Integer> {
-
+	
 }

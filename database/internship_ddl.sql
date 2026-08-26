@@ -5,7 +5,7 @@ use internship_db;
 create table user (
 	userId int primary key auto_increment,
     username varchar(40) not null unique,
-    password varchar(100) not null,
+    password varchar(256) not null,
     email varchar(50) not null unique
 );
 

@@ -1,0 +1,12 @@
+package org.unibl.etf.internship.intern_hub.model.dto.filter;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class InternshipLogFilterDTO {
+	private Integer companyId;
+	private Integer facultyId;
+}

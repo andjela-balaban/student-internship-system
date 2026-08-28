@@ -14,4 +14,7 @@ public class FacultyReviewLogDTO {
 //	@Max(value = 10, message = "Grade must be at most 10")
 	@Range(min = 5, max = 10, message = "Grade must be between 5 and 10")
 	private Integer grade;
+	
+	@NotBlank(message = "Faculty comment is required and must not be blank")
+	private String facultyComment;
 }

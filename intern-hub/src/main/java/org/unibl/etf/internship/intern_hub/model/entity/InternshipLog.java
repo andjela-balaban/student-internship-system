@@ -32,7 +32,7 @@ public class InternshipLog {
 	private Student student;
 	
 	@ManyToOne
-	@JoinColumn(name = "intershipId", nullable = false)
+	@JoinColumn(name = "internshipId", nullable = false)
 	private Internship internship;
 	
 	@ManyToOne

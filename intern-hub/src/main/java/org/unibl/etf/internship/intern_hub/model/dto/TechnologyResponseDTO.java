@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 public class TechnologyResponseDTO {
 
-	private Integer companyId;
+	private Integer technologyId;
 	private String name; 
 }

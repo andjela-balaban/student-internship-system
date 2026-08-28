@@ -11,6 +11,4 @@ public class CompanyReviewLogDTO {
 	@NotBlank(message = "Comapany comment is required and must not be blank")
 	private String companyComment;
 	
-	@NotBlank(message = "Faculty comment is required and must not be blank")
-	private String facultyComment;
 }

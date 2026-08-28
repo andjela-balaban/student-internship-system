@@ -317,8 +317,3 @@ values
     '2026-07-22 10:15:00',
     null
 );
-
-select * from user;
-select * from faculty;
-select * from company;
-select * from student;

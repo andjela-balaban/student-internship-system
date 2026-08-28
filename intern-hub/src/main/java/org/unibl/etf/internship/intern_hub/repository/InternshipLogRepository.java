@@ -6,7 +6,7 @@ import org.unibl.etf.internship.intern_hub.model.entity.*;
 import java.util.*;
 
 @Repository
-public interface IntershipLogrepository extends JpaRepository<InternshipLog, Integer>, JpaSpecificationExecutor<InternshipLog> {
+public interface InternshipLogRepository extends JpaRepository<InternshipLog, Integer>, JpaSpecificationExecutor<InternshipLog> {
 	
 	List<InternshipLog> findAllByStudentUserId(Integer userId);
 	

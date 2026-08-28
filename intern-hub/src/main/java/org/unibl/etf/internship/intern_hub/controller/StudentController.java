@@ -55,11 +55,10 @@ public class StudentController {
 		return ResponseEntity.ok(studentService.getStudentApplications(id));
 	}
 	
-	
-	@PostMapping(value = "/csv-upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Void> createStudentsFromCsv(@RequestParam Integer facultyId, @RequestParam MultipartFile file) throws Exception {
-		studentService.createFromCSV(file, facultyId);
-		return ResponseEntity.ok().build();
+	@PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Void> createStudentsFromCsv(@RequestParam("facultyId") Integer facultyId, @RequestParam("file") MultipartFile file) throws Exception {
+	    studentService.createFromCSV(file, facultyId);
+	    return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 }

@@ -15,4 +15,9 @@ public interface StudentMapper {
 	@Mapping(source = "userId", target = "studentId")
 	StudentResponseDTO toResponseDTO(Student student);
 	
+	@Mapping(target = "faculty", ignore = true)
+	@Mapping(target = "userId", ignore = true)
+	@Mapping(target = "cv", ignore = true)
+	Student toEntity(CsvStudentDTO dto);
+	
 }

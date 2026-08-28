@@ -2,14 +2,19 @@ package org.unibl.etf.internship.intern_hub.service;
 
 import org.unibl.etf.internship.intern_hub.mapper.*;
 import org.unibl.etf.internship.intern_hub.model.dto.*;
+import org.unibl.etf.internship.intern_hub.model.dto.filter.*;
 import org.unibl.etf.internship.intern_hub.model.entity.*;
 import org.unibl.etf.internship.intern_hub.repository.*;
+import org.unibl.etf.internship.intern_hub.specification.*;
+import com.opencsv.bean.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.*;
 import jakarta.persistence.*;
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -53,6 +58,15 @@ public class StudentService {
 	
 		return studentMapper.toResponseDTO(entity);
 	}
+	
+	@Transactional(readOnly = true)
+    public List<StudentResponseDTO> search(StudentFilterDTO filter) {
+        Specification<Student> spec = StudentSpecification.getStudentsByFilter(filter);
+        return studentRepository.findAll(spec)
+                .stream()
+                .map(studentMapper::toResponseDTO)
+                .toList();
+    }
 	
 	public StudentResponseDTO createStudent(StudentRequestDTO request) {
 		if(userRepository.existsByUsername(request.getUsername())) {
@@ -130,6 +144,29 @@ public class StudentService {
 	
 	
 	public void createFromCSV(MultipartFile file, Integer facultyId) throws Exception {
-		//TODO
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new EntityNotFoundException("Faculty with ID " + facultyId + " not found!"));
+
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            CsvToBean<CsvStudentDTO> csvToBean = new CsvToBeanBuilder<CsvStudentDTO>(reader)
+                    .withType(CsvStudentDTO.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            List<CsvStudentDTO> csvStudents = csvToBean.parse();
+
+            for (CsvStudentDTO dto : csvStudents) {
+                if (userRepository.existsByUsername(dto.getUsername())) {
+                    throw new IllegalArgumentException("Username " + dto.getUsername() + " is already taken!");
+                }
+
+                Student student = studentMapper.toEntity(dto);
+                student.setFaculty(faculty);
+                student.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+                studentRepository.save(student);
+            }
+        }
 	}
+
 }

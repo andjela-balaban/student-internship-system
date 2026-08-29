@@ -1,0 +1,4 @@
+username,email,password,firstName,lastName,studentIndex,dateOfBirth,phoneNumber
+mmarkovic,marko.markovic@student.etf.unibl.org,Sifra123!,Marko,Marković,1122/20,15.05.2002.,065123456
+pjovanovic,petar.jovanovic@student.etf.unibl.org,Sifra123!,Petar,Jovanović,1123/20,20.11.2001.,065654321
+anikolic,ana.nikolic@student.etf.unibl.org,Sifra123!,Ana,Nikolić,1124/20,08.03.2002.,065987654

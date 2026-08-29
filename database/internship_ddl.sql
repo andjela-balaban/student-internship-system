@@ -5,7 +5,7 @@ use internship_db;
 create table user (
 	userId int primary key auto_increment,
     username varchar(40) not null unique,
-    password varchar(100) not null,
+    password varchar(256) not null,
     email varchar(50) not null unique
 );
 
@@ -48,7 +48,7 @@ create table cv (
     image mediumblob,
     interests varchar(150),
     address varchar(80), 
-	constraint RK_cv_student
+	constraint FK_cv_student
     foreign key (studentId)
     references student(studentId)
 );

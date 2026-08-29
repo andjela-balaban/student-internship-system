@@ -65,4 +65,5 @@ public class CvController {
         cvService.deleteCv(studentId);
         return ResponseEntity.noContent().build();
     }	
+	
 }

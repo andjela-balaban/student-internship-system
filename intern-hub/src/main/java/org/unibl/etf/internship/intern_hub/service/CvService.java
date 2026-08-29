@@ -54,8 +54,12 @@ public class CvService {
 		Cv cv = cvRepository.findByStudentUserId(studentId)
 				.orElseThrow(() -> new EntityNotFoundException("Student with ID " + studentId + " does not have a CV!"));
 		
-		if(cv.getImage() == null)
-			throw new EntityNotFoundException("Student with ID " + studentId + " does not have an image in their CV!");
+//		if(cv.getImage() == null)
+//			throw new EntityNotFoundException("Student with ID " + studentId + " does not have an image in their CV!");
+		
+		if (cv.getImage() == null || cv.getImage().length == 0) {
+	        return null;
+	    }
 		
 		return cv.getImage();
 	}
@@ -158,7 +162,17 @@ public class CvService {
 		cvRepository.delete(entity);
 	}
 	
-	
+	public void uploadCvImage(Integer studentId, MultipartFile imageFile) throws IOException {
+	    if (imageFile == null || imageFile.isEmpty()) {
+	        throw new IllegalArgumentException("Image file cannot be empty!");
+	    }
+
+	    Cv cv = cvRepository.findByStudentUserId(studentId)
+	            .orElseThrow(() -> new EntityNotFoundException("CV for student with ID " + studentId + " not found!"));
+
+	    cv.setImage(imageFile.getBytes());
+	    cvRepository.save(cv);
+	}
 	
 	
 }

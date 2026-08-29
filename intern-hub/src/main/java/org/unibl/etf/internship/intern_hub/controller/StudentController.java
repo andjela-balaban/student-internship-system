@@ -1,7 +1,7 @@
 package org.unibl.etf.internship.intern_hub.controller;
 
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.unibl.etf.internship.intern_hub.model.dto.*;
 import org.unibl.etf.internship.intern_hub.service.*;
 import jakarta.validation.Valid;
+
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -17,6 +19,12 @@ public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+    private PdfService pdfService;
+	
+	@Autowired
+    private CvService cvService;
 	
 	@GetMapping
 	public ResponseEntity<List<StudentResponseDTO>> getAll() {
@@ -59,6 +67,33 @@ public class StudentController {
 	public ResponseEntity<Void> createStudentsFromCsv(@RequestParam("facultyId") Integer facultyId, @RequestParam("file") MultipartFile file) throws Exception {
 	    studentService.createFromCSV(file, facultyId);
 	    return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	@GetMapping(value = "/{studentId}/cv/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<byte[]> downloadCvPdfByStudentId(@PathVariable Integer studentId) throws Exception {
+	    CvResponseDTO cvDto = cvService.getCvByStudentId(studentId);
+	    byte[] profileImage = cvService.getCvImage(studentId);
+
+	    byte[] pdfBytes = pdfService.generateCvPdf(cvDto, profileImage);
+
+	    String fileName = "CV_" + cvDto.getStudent().getFirstName() + "_" + cvDto.getStudent().getLastName() + ".pdf";
+
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_PDF);
+	    headers.setContentDisposition(ContentDisposition.inline()
+	            .filename(fileName)
+	            .build());
+
+	    return ResponseEntity.ok().headers(headers).body(pdfBytes);
+	}
+	
+	@PostMapping(value = "/{studentId}/cv-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Void> uploadCvImage(
+	        @PathVariable Integer studentId,
+	        @RequestParam("image") MultipartFile image) throws IOException {
+
+	    cvService.uploadCvImage(studentId, image);
+	    return ResponseEntity.ok().build();
 	}
 
 }

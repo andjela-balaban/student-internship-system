@@ -8,3 +8,9 @@ intern-hub/target/
 intern-hub/.classpath
 intern-hub/.settings
 intern-hub/.project
+
+faculty-app/.DS_Store
+faculty-app/build/
+faculty-app/.classpath
+faculty-app/.settings
+faculty-app/.project

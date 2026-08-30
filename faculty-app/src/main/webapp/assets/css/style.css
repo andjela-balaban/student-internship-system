@@ -63,3 +63,134 @@ body {
     border-bottom-right-radius: 10px;
     border-color: #dee2e6;
 }
+
+.dashboard-container {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: #ffffff;
+    border-right: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
+}
+
+
+.sidebar-logo {
+    max-height: 95px;
+    width: auto;
+    margin-bottom: 1.5rem;
+}
+
+.nav-link-custom {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem 1rem;
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.nav-link-custom:hover {
+    background-color: #f1f3f5;
+    color: #1e3a70;
+}
+
+.nav-link-custom.active {
+    background-color: #edf2fc;
+    color: #1e3a70;
+    border: 1px solid #d0e1fd;
+    font-weight: 600;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2.5rem;
+    background-color: #ffffff;
+}
+
+.table-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    overflow: hidden;
+}
+
+.table-custom {
+    margin-bottom: 0;
+}
+
+.table-custom th {
+    background-color: #f0f4f8;
+    color: #1e293b;
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table-custom td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.action-icon {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+
+.action-icon:hover {
+    color: #182649;
+    font-size: 1.12rem;
+}
+
+
+/* Dugmad u modalima */
+.btn-modal {
+    min-width: 130px;
+    height: 42px;
+    padding: 0 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-modal-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.btn-modal-secondary:hover {
+    background-color: #5a6268;
+    color: #ffffff;
+}
+
+.btn-modal-primary {
+    background-color: #1e3a70;
+    color: #ffffff;
+}
+
+.btn-modal-primary:hover {
+    background-color: #142850;
+    color: #ffffff;
+}

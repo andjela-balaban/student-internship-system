@@ -22,12 +22,14 @@ public class Controller extends HttpServlet {
 	
 	private UserService userService;
 	private CompanyService companyService;
+	private InternshipService internshipService;
 	
 	@Override
     public void init() throws ServletException {
         super.init();
         this.userService = new UserService();
         this.companyService = new CompanyService();
+        this.internshipService = new InternshipService();
     }
        
     /**
@@ -167,6 +169,25 @@ public class Controller extends HttpServlet {
                 response.sendRedirect("Controller?action=companies");
                 return;
 
+            case "internships":
+                UserBean userForInternships = (UserBean) session.getAttribute("userBean");
+
+                if (userForInternships != null && userForInternships.getJwtToken() != null) {
+                    try {
+                        List<InternshipResponseDTO> internships = internshipService.getAll(userForInternships.getJwtToken());
+                        request.setAttribute("internships", internships);
+                        address = "/WEB-INF/pages/internships.jsp";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error fetching internships: " + e.getMessage());
+                        address = "/WEB-INF/pages/internships.jsp";
+                    }
+                } else {
+                    response.sendRedirect("Controller?action=login_page");
+                    return;
+                }
+                break;
+                
             case "logout":
                 session.invalidate();
                 response.sendRedirect("Controller?action=login_page");

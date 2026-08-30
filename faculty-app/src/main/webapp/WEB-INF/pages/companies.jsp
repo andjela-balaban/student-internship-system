@@ -6,25 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InternHub - Companies</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Eksterni CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
     <div class="d-flex dashboard-container">
         
-        <!-- Bočni Meni -->
         <jsp:include page="../components/sidebar.jsp">
             <jsp:param name="activePage" value="companies" />
         </jsp:include>
 
-        <!-- Glavni Sadržaj -->
         <main class="main-content">
             
-            <!-- Naslov i Create New dugme -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold m-0 text-dark">Companies</h2>
                 <button type="button" 
@@ -36,17 +30,17 @@
                 </button>
             </div>
 
-            <!-- Tabela sa kompanijama -->
+
             <div class="table-card">
                 <div class="table-responsive">
                     <table class="table table-custom align-middle">
                         <thead>
                             <tr>
-                                <th>Company name</th>
+                                <th>Company</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Status</th>
-                                <th class="text-center" style="width: 100px;">Actions</th>
+                                <th class="text-center" style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,13 +91,10 @@
         </main>
     </div>
 
-    <!-- Uključivanje Reusable Modal Komponente -->
     <jsp:include page="../components/company-modal.jsp" />
 
-    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- JS Skripta za prilagođavanje modala (Create vs Edit) -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const btnCreate = document.getElementById('btnCreateCompany');
@@ -129,7 +120,6 @@
                 modalAction.value = 'create-company';
                 modalSubmitBtn.textContent = 'Create';
                 
-                // Očisti polja i ukloni readonly
                 fieldId.value = '';
                 fieldName.value = '';
                 fieldUsername.value = '';
@@ -140,7 +130,6 @@
                 fieldUsername.readOnly = false;
                 fieldEmail.readOnly = false;
 
-                // Prikaži lozinku, sakrij status
                 passwordGroup.style.display = 'block';
                 fieldPassword.required = true;
                 statusGroup.style.display = 'none';
@@ -153,7 +142,6 @@
                     modalAction.value = 'update-status';
                     modalSubmitBtn.textContent = 'Save Changes';
                     
-                    // Popuni polja i postavi readonly
                     fieldId.value = this.getAttribute('data-id');
                     fieldName.value = this.getAttribute('data-name');
                     fieldUsername.value = this.getAttribute('data-username');
@@ -163,7 +151,6 @@
                     fieldUsername.readOnly = true;
                     fieldEmail.readOnly = true;
 
-                    // Sakrij lozinku, prikaži status
                     passwordGroup.style.display = 'none';
                     fieldPassword.required = false;
                     statusGroup.style.display = 'block';

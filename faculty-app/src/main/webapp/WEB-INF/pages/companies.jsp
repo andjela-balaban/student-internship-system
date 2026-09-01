@@ -26,7 +26,7 @@
                         class="btn btn-navy btn-custom px-4 d-inline-flex align-items-center gap-2 fw-semibold"
                         data-bs-toggle="modal" 
                         data-bs-target="#companyModal">
-                    Create new
+                    Add Company
                 </button>
             </div>
 

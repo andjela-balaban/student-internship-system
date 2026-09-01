@@ -12,17 +12,21 @@ import javax.servlet.http.HttpSession;
 import org.unibl.etf.faculty_app.model.*;
 import org.unibl.etf.faculty_app.model.dto.*;
 import org.unibl.etf.faculty_app.service.*;
+import javax.servlet.annotation.MultipartConfig;
 
 /**
  * Servlet implementation class Controller
  */
 @WebServlet("/Controller")
+@MultipartConfig
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private UserService userService;
 	private CompanyService companyService;
 	private InternshipService internshipService;
+	private StudentService studentService;
+	private InternshipLogService logService;
 	
 	@Override
     public void init() throws ServletException {
@@ -30,6 +34,8 @@ public class Controller extends HttpServlet {
         this.userService = new UserService();
         this.companyService = new CompanyService();
         this.internshipService = new InternshipService();
+        this.studentService = new StudentService();
+        this.logService = new InternshipLogService();
     }
        
     /**
@@ -187,6 +193,156 @@ public class Controller extends HttpServlet {
                     return;
                 }
                 break;
+                
+            case "students":
+                UserBean userForStudents = (UserBean) session.getAttribute("userBean");
+                if (userForStudents != null && userForStudents.getJwtToken() != null) {
+                    try {
+                        List<StudentResponseDTO> students = studentService.getAll(userForStudents.getJwtToken());
+                        request.setAttribute("students", students);
+                        address = "/WEB-INF/pages/students.jsp";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error fetching students: " + e.getMessage());
+                        address = "/WEB-INF/pages/students.jsp";
+                    }
+                } else {
+                    response.sendRedirect("Controller?action=login_page");
+                    return;
+                }
+                break;
+
+            case "create-student":
+                UserBean userForCreateStudent = (UserBean) session.getAttribute("userBean");
+                if (userForCreateStudent != null && userForCreateStudent.getJwtToken() != null) {
+                    try {
+                        StudentRequestDTO dto = new StudentRequestDTO();
+                        dto.setFirstName(request.getParameter("firstName"));
+                        dto.setLastName(request.getParameter("lastName"));
+                        dto.setStudentIndex(request.getParameter("studentIndex"));
+                        dto.setEmail(request.getParameter("email"));
+                        dto.setUsername(request.getParameter("username"));
+                        dto.setPassword(request.getParameter("password"));
+                        dto.setDateOfBirth(java.time.LocalDate.parse(request.getParameter("dateOfBirth")));
+                        dto.setPhoneNumber(request.getParameter("phoneNumber"));
+                        dto.setFacultyId(Integer.parseInt(request.getParameter("facultyId")));
+
+                        studentService.createStudent(dto, userForCreateStudent.getJwtToken());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error creating student: " + e.getMessage());
+                    }
+                }
+                response.sendRedirect("Controller?action=students");
+                return;
+
+            case "update-student":
+                UserBean userForUpdateStudent = (UserBean) session.getAttribute("userBean");
+                Integer updatedStudentId = null;
+                if (userForUpdateStudent != null && userForUpdateStudent.getJwtToken() != null) {
+                    try {
+                        updatedStudentId = Integer.parseInt(request.getParameter("studentId"));
+                        StudentRequestDTO dto = new StudentRequestDTO();
+                        dto.setFirstName(request.getParameter("firstName"));
+                        dto.setLastName(request.getParameter("lastName"));
+                        dto.setStudentIndex(request.getParameter("studentIndex"));
+                        dto.setEmail(request.getParameter("email"));
+                        dto.setUsername(request.getParameter("username"));
+                        dto.setDateOfBirth(java.time.LocalDate.parse(request.getParameter("dateOfBirth")));
+                        dto.setPhoneNumber(request.getParameter("phoneNumber"));
+                        dto.setFacultyId(Integer.parseInt(request.getParameter("facultyId")));
+
+                        studentService.updateStudent(updatedStudentId, dto, userForUpdateStudent.getJwtToken());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error updating student: " + e.getMessage());
+                    }
+                }
+                if (updatedStudentId != null) {
+                    response.sendRedirect("Controller?action=student-details&id=" + updatedStudentId);
+                } else {
+                    response.sendRedirect("Controller?action=students");
+                }
+                return;
+
+            case "delete-student":
+                UserBean userForDeleteStudent = (UserBean) session.getAttribute("userBean");
+                if (userForDeleteStudent != null && userForDeleteStudent.getJwtToken() != null) {
+                    try {
+                        Integer studentId = Integer.parseInt(request.getParameter("id"));
+                        studentService.deleteStudent(studentId, userForDeleteStudent.getJwtToken());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error deleting student: " + e.getMessage());
+                    }
+                }
+                response.sendRedirect("Controller?action=students");
+                return;
+
+            case "student-details":
+                UserBean userForStudentDetails = (UserBean) session.getAttribute("userBean");
+                if (userForStudentDetails != null && userForStudentDetails.getJwtToken() != null) {
+                    try {
+                        Integer studentId = Integer.parseInt(request.getParameter("id"));
+                        StudentResponseDTO student = studentService.getById(studentId, userForStudentDetails.getJwtToken());
+                        List<InternshipLogResponseDTO> logs = logService.getLogsForStudent(studentId, userForStudentDetails.getJwtToken());
+
+                        request.setAttribute("student", student);
+                        request.setAttribute("logs", logs);
+                        address = "/WEB-INF/pages/student-details.jsp";
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error fetching student details: " + e.getMessage());
+                        address = "/WEB-INF/pages/students.jsp";
+                    }
+                } else {
+                    response.sendRedirect("Controller?action=login_page");
+                    return;
+                }
+                break;
+
+            case "review-log":
+                UserBean userForReview = (UserBean) session.getAttribute("userBean");
+                String returnStudentId = request.getParameter("studentId");
+                if (userForReview != null && userForReview.getJwtToken() != null) {
+                    try {
+                        Integer logId = Integer.parseInt(request.getParameter("logId"));
+                        Integer grade = Integer.parseInt(request.getParameter("grade"));
+                        String facultyComment = request.getParameter("facultyComment");
+
+                        FacultyReviewLogDTO reviewDto = new FacultyReviewLogDTO(grade, facultyComment);
+                        logService.reviewLogByFaculty(logId, reviewDto, userForReview.getJwtToken());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error reviewing log: " + e.getMessage());
+                    }
+                }
+                response.sendRedirect("Controller?action=student-details&id=" + returnStudentId);
+                return;
+                
+            case "import-students":
+                UserBean userForImport = (UserBean) session.getAttribute("userBean");
+                if (userForImport != null && userForImport.getJwtToken() != null) {
+                    try {
+                        Part filePart = request.getPart("file");
+                        Integer facultyId = Integer.parseInt(request.getParameter("facultyId"));
+
+                        if (filePart != null && filePart.getSize() > 0) {
+                            String fileName = filePart.getSubmittedFileName();
+                            try (InputStream inputStream = filePart.getInputStream()) {
+                                studentService.importCsv(inputStream, fileName, facultyId, userForImport.getJwtToken());
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        session.setAttribute("notification", "Error uploading CSV file: " + e.getMessage());
+                    }
+                } else {
+                    response.sendRedirect("Controller?action=login_page");
+                    return;
+                }
+                response.sendRedirect("Controller?action=students");
+                return;
                 
             case "logout":
                 session.invalidate();

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,9 +36,10 @@
                             Index: <c:out value="${student.studentIndex}" />
                         </span>
                     </div>
+
                     <button type="button" 
                             id="btnEditStudent"
-                            class="btn btn-outline-primary btn-sm rounded-3 px-3 fw-semibold"
+                            class="btn btn-sm rounded-3 px-3 fw-semibold btn-outline-teal"
                             data-bs-toggle="modal" 
                             data-bs-target="#studentModal"
                             data-id="${student.studentId}"
@@ -74,42 +77,75 @@
                 </div>
             </div>
 
-            <!-- Internship Logs Section -->
+            <!-- Section Title -->
             <h4 class="fw-bold text-dark mb-3">Internship Logs &amp; Work Journal</h4>
 
+            <!-- Internship Logs Section -->
             <div class="d-flex flex-column gap-3">
                 <c:forEach var="log" items="${logs}" varStatus="status">
                     <div class="table-card p-4">
+                        
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold text-dark m-0">
-                                Log #${status.count} &mdash; <c:out value="${log.internship != null ? log.internship.name : 'Internship'}" />
-                            </h5>
-                            <div>
+                            <div class="d-flex align-items-center gap-3">
+                                <h5 class="fw-bold text-dark m-0">
+                                    Log #${status.count} &mdash; <c:out value="${log.internship != null ? log.internship.name : 'Internship'}" />
+                                </h5>
+                                
                                 <c:choose>
                                     <c:when test="${log.grade != null}">
-                                        <span class="badge bg-success fs-6">Grade: <c:out value="${log.grade}" /></span>
+                                        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold">
+                                            Graded
+                                        </span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="badge bg-warning text-dark fs-6">Not Graded</span>
+                                        <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 fw-semibold">
+                                            Not Graded
+                                        </span>
                                     </c:otherwise>
                                 </c:choose>
-                                <button type="button" 
-                                        class="btn btn-navy btn-sm rounded-3 ms-2 px-3 btn-review-log"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#logReviewModal"
-                                        data-logid="${log.logId}"
-                                        data-grade="${log.grade != null ? log.grade : ''}"
-                                        data-comment="${log.facultyComment != null ? log.facultyComment : ''}">
-                                    Review / Grade
-                                </button>
                             </div>
+
+                            <c:choose>
+                                <c:when test="${log.grade != null}">
+                                    <span class="fw-bold fs-6 text-dark me-2">
+                                        Grade: <c:out value="${log.grade}" />
+                                    </span>
+                                </c:when>
+                                <c:otherwise>
+                                    <button type="button" 
+                                            class="btn btn-navy btn-sm rounded-3 px-3 btn-review-log"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#logReviewModal"
+                                            data-logid="${log.logId}"
+                                            data-grade=""
+                                            data-comment="${log.facultyComment != null ? log.facultyComment : ''}">
+                                        Review / Grade
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
+                        <!-- Weekly Log Entries -->
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-semibold">Student Log Content</label>
-                            <div class="p-3 bg-light rounded-3 text-dark fs-6">
-                                <c:out value="${log.content != null ? log.content : 'No content entered yet.'}" />
-                            </div>
+                            <label class="form-label text-muted small fw-semibold mb-2">Student Log Content</label>
+                            <c:choose>
+                                <c:when test="${not empty log.content}">
+                                    <div class="d-flex flex-column gap-2">
+                                        <c:forEach var="entry" items="${fn:split(log.content, newLineChar)}">
+                                            <c:if test="${not empty fn:trim(entry)}">
+                                                <div class="p-3 bg-light rounded-3 text-dark fs-6">
+                                                    <c:out value="${fn:trim(entry)}" />
+                                                </div>
+                                            </c:if>
+                                        </c:forEach>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="p-3 bg-light rounded-3 text-muted fs-6">
+                                        No content entered yet.
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
                         <div class="row g-3">
@@ -147,7 +183,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Setup Edit Student Modal
             const btnEdit = document.getElementById('btnEditStudent');
             if (btnEdit) {
                 btnEdit.addEventListener('click', function () {
@@ -160,14 +195,19 @@
                     document.getElementById('modalLastName').value = this.getAttribute('data-lastname');
                     document.getElementById('modalStudentIndex').value = this.getAttribute('data-index');
                     document.getElementById('modalEmail').value = this.getAttribute('data-email');
-                    document.getElementById('modalUsername').value = this.getAttribute('data-username');
+                    
+                    const usernameInput = document.getElementById('modalUsername');
+                    usernameInput.value = this.getAttribute('data-username');
+                    usernameInput.readOnly = true;
+
                     document.getElementById('modalDateOfBirth').value = this.getAttribute('data-dob');
                     document.getElementById('modalPhoneNumber').value = this.getAttribute('data-phone');
                     document.getElementById('modalFacultyId').value = this.getAttribute('data-facultyid');
 
                     const passwordGroup = document.getElementById('studentPasswordGroup');
-                    passwordGroup.style.display = 'none';
-                    document.getElementById('modalPassword').required = false;
+                    passwordGroup.style.display = 'block';
+                    document.getElementById('modalPassword').value = ''; 
+                    document.getElementById('modalPassword').required = true;
                 });
             }
 

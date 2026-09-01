@@ -112,9 +112,9 @@ public class InternshipLogService {
 			throw new IllegalArgumentException("This log has already been graded!");
 		}
 		
-		if(log.getFacultyComment() != null) {
-			throw new IllegalArgumentException("Comment has already been submitted for this log!");
-		}
+//		if(log.getFacultyComment() != null) {
+//			throw new IllegalArgumentException("Comment has already been submitted for this log!");
+//		}
 		
 		log.setGrade(dto.getGrade());
 		log.setFacultyComment(dto.getFacultyComment());

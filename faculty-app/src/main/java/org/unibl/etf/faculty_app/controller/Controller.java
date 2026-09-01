@@ -248,6 +248,7 @@ public class Controller extends HttpServlet {
                         dto.setStudentIndex(request.getParameter("studentIndex"));
                         dto.setEmail(request.getParameter("email"));
                         dto.setUsername(request.getParameter("username"));
+                        dto.setPassword(request.getParameter("password"));
                         dto.setDateOfBirth(java.time.LocalDate.parse(request.getParameter("dateOfBirth")));
                         dto.setPhoneNumber(request.getParameter("phoneNumber"));
                         dto.setFacultyId(Integer.parseInt(request.getParameter("facultyId")));

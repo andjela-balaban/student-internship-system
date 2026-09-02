@@ -1,6 +1,7 @@
 package org.unibl.etf.company_app.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.unibl.etf.company_app.model.dto.InternshipRequestDTO;
@@ -22,6 +23,7 @@ public class InternshipService {
     public InternshipService() {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     private String getBaseUrl() {

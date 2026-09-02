@@ -14,3 +14,9 @@ faculty-app/build/
 faculty-app/.classpath
 faculty-app/.settings
 faculty-app/.project
+
+company-app/.DS_Store
+company-app/build/
+company-app/.classpath
+company-app/.settings
+company-app/.project

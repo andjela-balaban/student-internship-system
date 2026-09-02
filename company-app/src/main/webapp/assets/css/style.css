@@ -154,14 +154,36 @@ body {
 
 .action-icon {
     color: #64748b;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 6px 10px;
+    border-radius: 8px;
     text-decoration: none;
     font-size: 1.1rem;
-    transition: color 0.2s;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.action-icon:hover {
-    color: #2b858e;
-    font-size: 1.12rem;
+.action-icon:hover,
+.action-icon:focus {
+    color: #37A5B0 !important;
+    background-color: #eaf6f7 !important;
+}
+
+.action-icon-danger {
+    color: #64748b;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.action-icon-danger:hover,
+.action-icon-danger:focus {
+    color: #dc3545 !important;
+    background-color: #ffeef0 !important;
 }
 
 .custom-dropdown-menu {

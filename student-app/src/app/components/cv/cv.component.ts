@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CvService } from '../../services/cv.service';
 import { AuthService } from '../../services/auth.service';
-import { CvResponse } from '../../models/cv.model';
+import { CvResponse, EducationItem, ExperienceItem } from '../../models/cv.model';
 import { TechnologyResponse } from '../../models/internship.model';
 
 @Component({
@@ -40,8 +40,52 @@ export class CvComponent implements OnInit {
     this.cvForm = this.fb.group({
       interests: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      technologyIds: [[]]
+      technologyIds: [[]],
+      education: this.fb.array([]),
+      experience: this.fb.array([])
     });
+  }
+
+  get educationArray(): FormArray {
+    return this.cvForm.get('education') as FormArray;
+  }
+
+  get experienceArray(): FormArray {
+    return this.cvForm.get('experience') as FormArray;
+  }
+
+  createEducationGroup(item?: EducationItem): FormGroup {
+    return this.fb.group({
+      institution: [item?.institution || '', [Validators.required]],
+      degree: [item?.degree || '', [Validators.required]],
+      startDate: [item?.startDate || ''],
+      endDate: [item?.endDate || '']
+    });
+  }
+
+  createExperienceGroup(item?: ExperienceItem): FormGroup {
+    return this.fb.group({
+      company: [item?.company || '', [Validators.required]],
+      position: [item?.position || '', [Validators.required]],
+      startDate: [item?.startDate || ''],
+      endDate: [item?.endDate || '']
+    });
+  }
+
+  addEducation(item?: EducationItem): void {
+    this.educationArray.push(this.createEducationGroup(item));
+  }
+
+  removeEducation(index: number): void {
+    this.educationArray.removeAt(index);
+  }
+
+  addExperience(item?: ExperienceItem): void {
+    this.experienceArray.push(this.createExperienceGroup(item));
+  }
+
+  removeExperience(index: number): void {
+    this.experienceArray.removeAt(index);
   }
 
   loadData(): void {
@@ -82,6 +126,18 @@ export class CvComponent implements OnInit {
       address: cvData.address || '',
       technologyIds: selectedTechIds
     });
+
+    // Populate Education
+    this.educationArray.clear();
+    if (cvData.education && cvData.education.length > 0) {
+      cvData.education.forEach(edu => this.addEducation(edu));
+    }
+
+    // Populate Experience
+    this.experienceArray.clear();
+    if (cvData.experience && cvData.experience.length > 0) {
+      cvData.experience.forEach(exp => this.addExperience(exp));
+    }
   }
 
   onImageSelected(event: Event): void {

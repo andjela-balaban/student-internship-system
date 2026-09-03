@@ -4,7 +4,7 @@ import org.unibl.etf.internship.intern_hub.model.entity.*;
 import org.unibl.etf.internship.intern_hub.model.dto.*;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {TechnologyMapper.class, CompanyMapper.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {TechnologyMapper.class, CompanyMapper.class})
 public interface InternshipMapper {
 
 	@Mapping(target = "internshipId", ignore = true)

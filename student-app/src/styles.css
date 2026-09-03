@@ -1,1 +1,240 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Dashboard Styling - Identical to Faculty & Company App Identity */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+:root {
+  --primary-teal: #37A5B0;
+  --primary-teal-dark: #2b8892;
+  --primary-teal-light: #eaf6f7;
+  --bg-main: #f8fafc;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+}
+
+/* Search Bar Placeholder Styling - Subtle Grayish */
+input::placeholder,
+textarea::placeholder,
+.form-control::placeholder {
+  color: #94a3b8 !important;
+  opacity: 0.75 !important;
+  font-weight: 400 !important;
+}
+
+/* Page Header Titles - Bigger Size */
+.page-title {
+  font-size: 2.1rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0 0 0.3rem 0 !important;
+  letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  background-color: var(--bg-main);
+  min-height: 100vh;
+}
+
+/* White Sidebar Container */
+.white-sidebar {
+  width: 250px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff !important;
+  border-right: 1px solid var(--border-color);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+/* Table Cards & Containers */
+.table-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* Custom Table Design */
+.table-custom {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-custom th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.table-custom td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.95rem;
+}
+
+.table-custom tbody tr:hover {
+  background-color: var(--primary-teal-light) !important;
+}
+
+/* Buttons & Badges */
+.btn-teal {
+  background-color: var(--primary-teal) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+  border: none !important;
+}
+
+.btn-teal:hover {
+  background-color: var(--primary-teal-dark) !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-teal {
+  border: 1px solid var(--primary-teal) !important;
+  color: var(--primary-teal) !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+}
+
+.btn-outline-teal:hover {
+  background-color: var(--primary-teal-light) !important;
+}
+
+.action-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-teal);
+  background-color: transparent;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.action-icon:hover {
+  background-color: var(--primary-teal-light);
+  color: var(--primary-teal-dark);
+}
+
+.text-teal {
+  color: var(--primary-teal) !important;
+}
+
+.bg-teal-subtle {
+  background-color: var(--primary-teal-light) !important;
+  color: var(--primary-teal-dark) !important;
+}
+
+.mat-mdc-form-field,
+.mat-mdc-text-field-wrapper,
+.mdc-text-field--filled:not(.mdc-text-field--disabled),
+.mat-mdc-select-trigger,
+.mat-mdc-select-value {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.mat-mdc-form-field-focus-overlay,
+.mdc-text-field__ripple::before,
+.mdc-text-field__ripple::after {
+  background-color: transparent !important;
+  display: none !important;
+}
+
+.mdc-tab-indicator__content--active-underline,
+.mat-mdc-tab-group.mat-primary .mdc-tab-indicator__content--active-underline {
+  border-color: var(--primary-teal) !important;
+}
+
+.mat-mdc-tab-header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.mat-mdc-tab .mdc-tab__text-label {
+  color: #64748b !important;
+}
+
+.mat-mdc-tab:hover .mdc-tab__text-label {
+  color: var(--primary-teal) !important;
+}
+
+.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: var(--primary-teal) !important;
+  font-weight: 700 !important;
+}
+
+.mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full,
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: var(--primary-teal) !important;
+}
+
+.mat-pseudo-checkbox-checked {
+  background-color: var(--primary-teal) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: var(--primary-teal-light) !important;
+}
+
+.mat-mdc-select-value-text,
+.mat-mdc-select-min-line {
+  color: #0f172a !important;
+}
+
+.mat-mdc-paginator,
+.mat-mdc-paginator-container {
+  background-color: #ffffff !important;
+  color: #475569 !important;
+}
+
+.mat-mdc-tab-group {
+  --mdc-tab-indicator-active-indicator-color: #257b84 !important;
+  --mat-tab-header-active-indicator-color: #257b84 !important;
+}
+
+.mat-mdc-tab-indicator .mdc-tab-indicator__content--active-indicator {
+  border-color: #257b84 !important;
+}
+
+.mat-tab-group .mat-ink-bar {
+  background-color: #257b84 !important;
+}

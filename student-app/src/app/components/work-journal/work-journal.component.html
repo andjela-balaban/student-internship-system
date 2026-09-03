@@ -1,0 +1,136 @@
+<div class="dashboard-layout">
+  <!-- Left Sidebar -->
+  <app-sidebar activePage="work-journal"></app-sidebar>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    
+    <!-- Title & Top Info -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+      <div>
+        <h2 class="page-title">Work Journal & Logs</h2>
+        <p class="page-subtitle">Track your weekly internship progress and view company and faculty reviews</p>
+      </div>
+    </div>
+
+    <!-- Main Container Card -->
+    <div class="table-card p-4">
+      
+      <!-- Search Bar Aligned to Right -->
+      <div class="d-flex justify-content-end mb-4">
+        <div class="input-group" style="max-width: 420px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="text" 
+                 [(ngModel)]="searchQuery" 
+                 (keyup)="applySearchFilter()" 
+                 class="form-control border-start-0 ps-0" 
+                 placeholder="Search logs by keyword or comment...">
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="text-center py-5">
+        <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+        <p class="text-muted mt-2">Loading work journal entries...</p>
+      </div>
+
+      <!-- Grouped Logs Accordion (By Company) -->
+      <div *ngIf="!loading">
+        <div *ngIf="filteredGroups && filteredGroups.length > 0; else noLogs">
+          
+          <mat-accordion multi class="company-accordion">
+            <mat-expansion-panel *ngFor="let group of filteredGroups" [expanded]="true" class="mb-3 border rounded-3 overflow-hidden">
+              
+              <mat-expansion-panel-header class="bg-light py-3">
+                <mat-panel-title class="fw-bold text-dark fs-5 m-0">
+                  <i class="bi bi-building me-2 text-teal"></i>
+                  {{ group.companyName }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <!-- Logs Inside Company Panel -->
+              <div class="pt-3">
+                <div *ngFor="let log of group.logs; let i = index" class="p-4 mb-3 border rounded-3 bg-white">
+                  
+                  <!-- Log Header -->
+                  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 border-bottom pb-3">
+                    <!-- Increased Font Size for Log Title -->
+                    <h5 class="fw-bold text-dark m-0" style="font-size: 1.2rem;">
+                      Log #{{ i + 1 }} &mdash; {{ log.internship ? log.internship.name : 'Internship' }}
+                    </h5>
+
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+                      <!-- Grade Badge on Right Side -->
+                      <span *ngIf="log.grade != null" class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold fs-6">
+                        Grade: {{ log.grade }}
+                      </span>
+                      <span *ngIf="log.grade == null" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-1 fw-semibold">
+                        Not Graded Yet
+                      </span>
+
+                      <!-- Add Entry Button (ONLY if NOT graded) -->
+                      <button *ngIf="log.grade == null" 
+                              class="btn btn-sm btn-teal rounded-3 px-3 fw-semibold d-inline-flex align-items-center gap-1 ms-2"
+                              (click)="openAddLogDialog(log)">
+                        <i class="bi bi-plus-lg"></i>
+                        <span>Add Log Entry</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Log Content Entries -->
+                  <div class="mb-4">
+                    <label class="form-label text-muted small fw-semibold mb-2">Student Journal Entries</label>
+                    
+                    <div *ngIf="parseEntries(log.content).length > 0; else noContent" class="d-flex flex-column gap-2">
+                      <div *ngFor="let entry of parseEntries(log.content)" class="p-3 bg-light rounded-3 text-dark small border-start border-3 border-teal">
+                        <i class="bi bi-calendar-check me-2 text-teal"></i>
+                        <span>{{ entry }}</span>
+                      </div>
+                    </div>
+                    
+                    <ng-template #noContent>
+                      <div class="p-3 bg-light rounded-3 text-muted small border">
+                        No entries recorded yet. Click <strong>"Add Log Entry"</strong> above to log your internship progress.
+                      </div>
+                    </ng-template>
+                  </div>
+
+                  <!-- Comments Section (Identical styling for company & faculty) -->
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label text-muted small fw-semibold">Company Mentor Comment</label>
+                      <div class="p-3 bg-light rounded-3 text-dark small border">
+                        {{ log.companyComment && log.companyComment.trim() ? log.companyComment : 'No company comment added yet.' }}
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label text-muted small fw-semibold">Faculty Supervisor Comment</label>
+                      <div class="p-3 bg-light rounded-3 text-dark small border">
+                        {{ log.facultyComment && log.facultyComment.trim() ? log.facultyComment : 'No faculty comment added yet.' }}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+
+        </div>
+
+        <ng-template #noLogs>
+          <div class="text-center py-5 text-muted">
+            <i class="bi bi-journal-text display-4 text-muted opacity-50 d-block mb-2"></i>
+            <h5>No work journal logs found</h5>
+            <p class="small">Once your internship application is accepted, your work journal will appear here.</p>
+          </div>
+        </ng-template>
+      </div>
+
+    </div>
+
+  </main>
+</div>

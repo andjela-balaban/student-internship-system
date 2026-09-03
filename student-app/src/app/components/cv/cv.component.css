@@ -1,0 +1,91 @@
+.avatar-container {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50% !important;
+  object-fit: cover;
+  border: 3px solid #37A5B0 !important;
+  padding: 0 !important;
+}
+
+.avatar-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50% !important;
+  background-color: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+}
+
+.text-teal {
+  color: #37A5B0 !important;
+}
+
+.bg-info-subtle {
+  background-color: #e0f2fe;
+}
+
+.custom-input {
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  min-height: 42px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-input:focus {
+  border-color: #37A5B0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(55, 165, 176, 0.2) !important;
+  outline: none !important;
+}
+
+::ng-deep .custom-mat-select.mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-color: #37A5B0;
+  --mat-select-focused-arrow-color: #37A5B0;
+  margin-bottom: -1.25em;
+}
+
+::ng-deep .custom-mat-select .mat-mdc-text-field-wrapper {
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  height: 42px !important;
+}
+
+::ng-deep .custom-mat-select .mat-mdc-form-field-flex {
+  height: 42px !important;
+  align-items: center !important;
+}
+
+::ng-deep .custom-mat-select .mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: #37A5B0 !important;
+}
+
+::ng-deep .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after,
+::ng-deep .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full {
+  background-color: #37A5B0 !important;
+}
+
+.cv-input {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  height: 42px !important;
+  font-size: 0.9rem !important;
+  color: #1e293b !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-input:focus {
+  border-color: #37A5B0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(55, 165, 176, 0.2) !important;
+  outline: none !important;
+}

@@ -1,0 +1,37 @@
+.sidebar-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-pills .nav-link {
+  color: #475569 !important;
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link:hover {
+  color: #37A5B0 !important;
+  background-color: #eaf6f7 !important;
+}
+
+.nav-pills .nav-link.active {
+  color: #37A5B0 !important;
+  background-color: #eaf6f7 !important;
+  font-weight: 700;
+  border-left: 4px solid #37A5B0;
+  border-radius: 0 10px 10px 0;
+}
+
+.text-teal {
+  color: #37A5B0;
+}
+
+.micro-text {
+  font-size: 0.72rem;
+}
+
+.hover-danger:hover {
+  color: #dc3545 !important;
+}

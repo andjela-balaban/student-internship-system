@@ -1,0 +1,54 @@
+<mat-toolbar color="primary" class="student-navbar">
+  <div class="navbar-container">
+    
+    <!-- Logo & Title -->
+    <div class="nav-brand" routerLink="/internships">
+      <img src="assets/img/logo.png" alt="InternHub Logo" class="nav-logo">
+      <span class="nav-title">InternHub <small class="role-badge">Student</small></span>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="nav-links" *ngIf="currentUser">
+      <a routerLink="/internships" routerLinkActive="active-link" class="nav-item">
+        <mat-icon class="nav-icon">work_outline</mat-icon>
+        <span>Internships</span>
+      </a>
+
+      <a routerLink="/work-journal" routerLinkActive="active-link" class="nav-item">
+        <mat-icon class="nav-icon">menu_book</mat-icon>
+        <span>Work Journal</span>
+      </a>
+
+      <a routerLink="/cv" routerLinkActive="active-link" class="nav-item">
+        <mat-icon class="nav-icon">badge</mat-icon>
+        <span>My CV</span>
+      </a>
+    </nav>
+
+    <!-- User Profile & Logout -->
+    <div class="nav-user" *ngIf="currentUser">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="profile-btn">
+        <mat-icon class="user-avatar">account_circle</mat-icon>
+        <span class="username-text">{{ currentUser.username }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu" class="student-user-menu">
+        <div class="menu-header px-3 py-2 border-bottom">
+          <p class="mb-0 fw-bold text-dark">{{ currentUser.username }}</p>
+          <small class="text-muted">Student Account</small>
+        </div>
+        <button mat-menu-item routerLink="/cv">
+          <mat-icon>person</mat-icon>
+          <span>My Profile & CV</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon color="warn">logout</mat-icon>
+          <span class="text-danger">Log Out</span>
+        </button>
+      </mat-menu>
+    </div>
+
+  </div>
+</mat-toolbar>

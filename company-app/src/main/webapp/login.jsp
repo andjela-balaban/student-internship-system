@@ -20,16 +20,20 @@
         if (usernameInput != null && !usernameInput.trim().isEmpty() &&
             passwordInput != null && !passwordInput.trim().isEmpty()) {
 
-            UserService userService = new UserService();
-            UserBean authenticatedUser = userService.login(usernameInput.trim(), passwordInput);
+            try {
+                UserService userService = new UserService();
+                UserBean authenticatedUser = userService.login(usernameInput.trim(), passwordInput);
 
-            if (authenticatedUser != null && authenticatedUser.isLoggedIn()) {
-                session.setAttribute("userBean", authenticatedUser);
-                session.removeAttribute("notification");
-                response.sendRedirect("internships.jsp");
-                return;
-            } else {
-                errorNotification = "Incorrect username or password, or unauthorized account!";
+                if (authenticatedUser != null && authenticatedUser.isLoggedIn()) {
+                    session.setAttribute("userBean", authenticatedUser);
+                    session.removeAttribute("notification");
+                    response.sendRedirect("internships.jsp");
+                    return;
+                } else {
+                    errorNotification = "Incorrect username or password, or unauthorized account!";
+                }
+            } catch (Exception e) {
+                errorNotification = e.getMessage() != null ? e.getMessage() : "Login failed. Please try again.";
             }
         } else {
             errorNotification = "Please enter both username and password.";
@@ -59,14 +63,14 @@
         <div class="card login-card p-4 p-md-5 mx-auto">
             <div class="row align-items-center g-4 w-100 mx-0">
                 
-                <!-- Lijeva strana: Logo -->
+                <!-- Left Side: Logo -->
                 <div class="col-12 col-md-6 text-center border-md-end pe-md-5">
                     <img src="${pageContext.request.contextPath}/assets/img/logo.png" 
                          alt="InternHub Logo" 
                          class="img-fluid logo-img">
                 </div>
 
-                <!-- Desna strana: Forma za prijavu -->
+                <!-- Right Side: Login Form -->
                 <div class="col-12 col-md-6 ps-md-5">
                     <h3 class="fw-bold mb-4 text-center text-md-start login-title">Welcome back!</h3>
 
@@ -87,10 +91,10 @@
                             </div>
                         </div>
                         
-                        <%-- Prikaz greske --%>
+                        <!-- Error Notification -->
                         <% if (errorNotification != null && !errorNotification.trim().isEmpty()) { %>
                             <div class="alert alert-danger py-2 small mb-3" role="alert">
-                                <%= errorNotification %>
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i><%= errorNotification %>
                             </div>
                         <% } %>
 

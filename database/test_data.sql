@@ -317,3 +317,5 @@ values
     '2026-07-22 10:15:00',
     null
 );
+
+select * from user;

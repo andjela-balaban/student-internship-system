@@ -1,0 +1,88 @@
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header-banner {
+  background: #1e293b;
+  border-left: 6px solid #D1C673;
+  color: #ffffff;
+  padding: 1.8rem 2rem;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.banner-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
+  letter-spacing: -0.4px;
+}
+
+.banner-subtitle {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.main-card {
+  border-radius: 14px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  background-color: #ffffff;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 500px;
+}
+
+.company-panel {
+  border-radius: 12px !important;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.log-card {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.text-gold {
+  color: #8c812d;
+}
+
+.badge-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: sub;
+}
+
+.bg-success-subtle {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.bg-warning-subtle {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.add-entry-btn {
+  background-color: #D1C673 !important;
+  color: #1e293b !important;
+  border-radius: 8px !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.entry-item {
+  border-left: 3px solid #D1C673;
+}
+
+.company-comment-box {
+  background-color: #f4efd3;
+  border: 1px solid #d1c673;
+  color: #5c541b;
+}

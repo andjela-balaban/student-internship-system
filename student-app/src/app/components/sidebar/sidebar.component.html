@@ -1,0 +1,54 @@
+<aside class="white-sidebar d-flex flex-column flex-shrink-0 p-3">
+  <!-- Logo Section (Centered & Larger) -->
+  <!-- <a routerLink="/internships" class="d-flex align-items-center justify-content-center mb-3 text-decoration-none py-2 px-1">
+    <img src="assets/img/logo2.png" alt="InternHub Logo" class="sidebar-logo">
+  </a> -->
+  <a routerLink="/internships"
+    class="d-flex align-items-center justify-content-center mb-3 text-decoration-none py-1 px-2">
+    <img src="assets/img/logo2.png" alt="InternHub Logo" class="sidebar-logo">
+  </a>
+
+  <hr class="opacity-10 my-2 text-muted">
+
+  <!-- Navigation Menu -->
+  <ul class="nav nav-pills flex-column mb-auto gap-1">
+    <li class="nav-item">
+      <a routerLink="/internships" routerLinkActive="active" class="nav-link d-flex align-items-center gap-3">
+        <i class="bi bi-briefcase fs-5"></i>
+        <span class="fw-semibold">Internships</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a routerLink="/work-journal" routerLinkActive="active" class="nav-link d-flex align-items-center gap-3">
+        <i class="bi bi-journal-text fs-5"></i>
+        <span class="fw-semibold">Work Journal</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a routerLink="/cv" routerLinkActive="active" class="nav-link d-flex align-items-center gap-3">
+        <i class="bi bi-person-badge fs-5"></i>
+        <span class="fw-semibold">My CV</span>
+      </a>
+    </li>
+  </ul>
+
+  <hr class="opacity-10 my-3 text-muted">
+
+  <!-- User Info & Logout -->
+  <div class="dropdown">
+    <div class="d-flex align-items-center justify-content-between text-decoration-none px-2">
+      <div class="d-flex align-items-center gap-2 overflow-hidden">
+        <i class="bi bi-person-circle fs-4 text-teal"></i>
+        <div class="text-truncate">
+          <span class="d-block fw-bold small text-dark text-truncate">{{ currentUser?.username || 'Student' }}</span>
+          <span class="d-block text-muted micro-text">Student Portal</span>
+        </div>
+      </div>
+      <button (click)="logout()" class="btn btn-link text-muted p-0 hover-danger" title="Log Out">
+        <i class="bi bi-box-arrow-right fs-5"></i>
+      </button>
+    </div>
+  </div>
+</aside>

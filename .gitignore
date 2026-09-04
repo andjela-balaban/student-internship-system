@@ -20,3 +20,5 @@ company-app/build/
 company-app/.classpath
 company-app/.settings
 company-app/.project
+
+student-app/.vscode/

@@ -9,6 +9,10 @@ import org.springframework.transaction.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.persistence.*;
 import java.util.*;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.SyndFeedOutput;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
@@ -94,6 +98,40 @@ public class InternshipService {
 		
 		internshipRepository.delete(entity);
 	}
+	
+	public String generateRssFeed() {
+		SyndFeed feed = new SyndFeedImpl();
+        feed.setFeedType("rss_2.0");
+        feed.setTitle("InternHub - Available Internships");
+        feed.setLink("http://localhost:8080/api/v1/internships/rss");
+        feed.setDescription("The latest advertisements for student internships");
+
+        List<Internship> internships = internshipRepository.findAll();
+        List<SyndEntry> entries = new ArrayList<>();
+
+        for (Internship internship : internships) {
+            SyndEntry entry = new SyndEntryImpl();
+            entry.setTitle(internship.getName());
+            entry.setLink("http://localhost:8080/api/v1/internships/" + internship.getInternshipId());
+            entry.setPublishedDate(new Date());
+
+            SyndContent description = new SyndContentImpl();
+            description.setType("text/plain");
+            description.setValue(internship.getDescription());
+            entry.setDescription(description);
+
+            entries.add(entry);
+        }
+
+        feed.setEntries(entries);
+
+        try {
+            return new SyndFeedOutput().outputString(feed);
+        } catch (FeedException e) {
+            throw new RuntimeException("Error generating RSS feed", e);
+        }
+    }
+	
 	
 	//TODO AI recommendations
 	

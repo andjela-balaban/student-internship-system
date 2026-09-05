@@ -8,6 +8,7 @@ import org.unibl.etf.internship.intern_hub.model.dto.*;
 import org.unibl.etf.internship.intern_hub.service.*;
 import jakarta.validation.Valid;
 import java.util.*;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("${api.prefix}/internships")
@@ -42,4 +43,12 @@ public class InternshipController {
 		internshipService.deleteInternship(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@GetMapping(value = "/rss", produces = "application/rss+xml; charset=UTF-8")
+    public ResponseEntity<String> getRssFeed() {
+        String rssXml = internshipService.generateRssFeed();
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/rss+xml; charset=UTF-8"))
+                .body(rssXml);
+    }
 }

@@ -4,7 +4,6 @@ import org.unibl.etf.internship.intern_hub.mapper.*;
 import org.unibl.etf.internship.intern_hub.model.dto.*;
 import org.unibl.etf.internship.intern_hub.model.entity.*;
 import org.unibl.etf.internship.intern_hub.repository.*;
-import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.persistence.*;
@@ -29,11 +28,14 @@ public class InternshipService {
 	@Autowired
 	private TechnologyRepository technologyRepository;
 	
-//	@Autowired
-//	private StudentService studentService;
-//	
-//	@Autowired
-//	private CvService cvService;
+	@Autowired
+	private StudentService studentService;
+	
+	@Autowired
+	private CvService cvService;
+	
+	@Autowired
+	private AiService groqService;
 	
 	@Transactional(readOnly = true)
 	public List<InternshipResponseDTO> getAll() {
@@ -77,7 +79,6 @@ public class InternshipService {
 		entity.setStartDate(internship.getStartDate());
 		entity.setEndDate(internship.getEndDate());
 		entity.setTermsAndConditions(internship.getTermsAndConditions());
-		
 		
 		List<Technology> technologies = new ArrayList<>();
 		for(Integer technologyId : internship.getTechnologyIds()) {
@@ -132,8 +133,92 @@ public class InternshipService {
         }
     }
 	
-	
-	//TODO AI recommendations
-	
+	public List<AiInternshipRecommendationResponseDTO> getRecommendations(Integer studentId) {
+		StudentResponseDTO student = studentService.getById(studentId);
+		CvResponseDTO cv = null;
+		try {
+			cv = cvService.getCvByStudentId(studentId);
+		} catch (Exception e) {
+		}
+		
+		List<InternshipResponseDTO> internships = getAll();
+		if (internships == null || internships.isEmpty()) {
+			return Collections.emptyList();
+		}
+		
+		AiRequestDTO request = new AiRequestDTO(internships, student, cv);
+		List<AiRecommendationResultDTO> results = groqService.getInternshipIds(request);
+		
+		List<AiInternshipRecommendationResponseDTO> recommendations = new ArrayList<>();
+		if (results != null && !results.isEmpty()) {
+			for (AiRecommendationResultDTO r : results) {
+				try {
+					InternshipResponseDTO internship = getById(r.getInternshipId());
+					recommendations.add(new AiInternshipRecommendationResponseDTO(
+						internship.getInternshipId(),
+						internship.getName(), 
+						internship.getDescription(),
+						internship.getCompany() != null ? internship.getCompany().getName() : "",
+						internship.getStartDate(),
+						internship.getTechnologies(),
+						r.getMatchPercentage(),
+						r.getReason()
+					));
+				} catch (Exception e) {
+				}
+			}
+		}
+		
+		if (recommendations.isEmpty()) {
+			Set<String> studentTechNames = new HashSet<>();
+			if (cv != null && cv.getTechnologies() != null) {
+				for (TechnologyResponseDTO tech : cv.getTechnologies()) {
+					if (tech.getName() != null) {
+						studentTechNames.add(tech.getName().toLowerCase());
+					}
+				}
+			}
+
+			for (InternshipResponseDTO internship : internships) {
+				List<String> matchedTechs = new ArrayList<>();
+				if (internship.getTechnologies() != null) {
+					for (TechnologyResponseDTO tech : internship.getTechnologies()) {
+						if (tech.getName() != null && studentTechNames.contains(tech.getName().toLowerCase())) {
+							matchedTechs.add(tech.getName());
+						}
+					}
+				}
+
+				double score = 0.65;
+				String reason = "Matches your faculty background: " + (student.getFaculty() != null ? student.getFaculty().getName() : "IT");
+
+				if (!studentTechNames.isEmpty() && internship.getTechnologies() != null && !internship.getTechnologies().isEmpty()) {
+					double matchRatio = (double) matchedTechs.size() / internship.getTechnologies().size();
+					if (matchedTechs.size() > 0) {
+						score = Math.min(0.98, 0.70 + (matchRatio * 0.28));
+						reason = "Matches " + matchedTechs.size() + " skills from your CV: " + String.join(", ", matchedTechs);
+					} else {
+						score = 0.50;
+						reason = "General IT internship matching your profile.";
+					}
+				}
+
+				recommendations.add(new AiInternshipRecommendationResponseDTO(
+					internship.getInternshipId(),
+					internship.getName(),
+					internship.getDescription(),
+					internship.getCompany() != null ? internship.getCompany().getName() : "",
+					internship.getStartDate(),
+					internship.getTechnologies(),
+					Math.round(score * 100.0) / 100.0,
+					reason
+				));
+			}
+		}
+		
+		recommendations.sort((r1, r2) -> Double.compare(r2.getMatchPercentage(), r1.getMatchPercentage()));
+		
+		return recommendations;
+	}
 
 }

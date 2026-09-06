@@ -51,4 +51,9 @@ public class InternshipController {
                 .contentType(MediaType.parseMediaType("application/rss+xml; charset=UTF-8"))
                 .body(rssXml);
     }
+	
+	@GetMapping("/ai-recommendations/{studentId}")
+	public ResponseEntity<List<AiInternshipRecommendationResponseDTO>> getRecommendations(@PathVariable Integer studentId) {
+		return ResponseEntity.ok(internshipService.getRecommendations(studentId));
+	}
 }

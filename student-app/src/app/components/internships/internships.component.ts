@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InternshipService } from '../../services/internship.service';
 import { ApplicationService } from '../../services/application.service';
 import { AuthService } from '../../services/auth.service';
-import { InternshipResponse } from '../../models/internship.model';
+import { InternshipResponse, AiRecommendationResponse } from '../../models/internship.model';
 import { ApplicationResponse } from '../../models/application.model';
 
 @Component({
@@ -17,10 +17,11 @@ export class InternshipsComponent implements OnInit {
   displayedColumns: string[] = ['name', 'company', 'period', 'technologies', 'status', 'action'];
   dataSource = new MatTableDataSource<InternshipResponse>([]);
   
-  aiRecommendations: InternshipResponse[] = [];
+  aiRecommendations: AiRecommendationResponse[] = [];
   studentApplications: Map<number, ApplicationResponse> = new Map();
   
   loading = true;
+  loadingAi = true;
   applyingMap: Map<number, boolean> = new Map();
   searchQuery = '';
 
@@ -43,46 +44,54 @@ export class InternshipsComponent implements OnInit {
 
     this.loading = true;
 
-    // Load Applications first
+    // 1. Load Applications
     this.applicationService.getStudentApplications(studentId).subscribe({
       next: (apps) => {
         this.studentApplications.clear();
-        apps.forEach(app => {
-          if (app.internship && app.internship.internshipId) {
-            this.studentApplications.set(app.internship.internshipId, app);
-          }
-        });
+        if (apps) {
+          apps.forEach(app => {
+            if (app.internship && app.internship.internshipId) {
+              this.studentApplications.set(app.internship.internshipId, app);
+            }
+          });
+        }
+      },
+      error: () => {
+        console.warn('Applications could not be loaded');
+      }
+    });
 
-        // Load All Internships
-        this.internshipService.getAll().subscribe({
-          next: (internships) => {
-            this.dataSource.data = internships;
-            setTimeout(() => {
-              this.dataSource.paginator = this.paginator;
-            });
-            this.setupCustomFilter();
-            this.loading = false;
-          },
-          error: () => {
-            this.loading = false;
-            this.snackBar.open('Failed to load internships.', 'Close', { duration: 3000 });
-          }
+    // 2. Load All Internships
+    this.internshipService.getAll().subscribe({
+      next: (internships) => {
+        this.dataSource.data = internships || [];
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
         });
-
-        // Load AI Recommendations
-        this.internshipService.getAiRecommended(studentId).subscribe({
-          next: (recs) => {
-            this.aiRecommendations = recs;
-          },
-          error: () => {
-            // Fallback if AI recommendations endpoint is empty
-            this.aiRecommendations = [];
-          }
-        });
+        this.setupCustomFilter();
+        this.loading = false;
       },
       error: () => {
         this.loading = false;
-        this.snackBar.open('Failed to load application data.', 'Close', { duration: 3000 });
+        this.snackBar.open('Failed to load internships.', 'Close', { duration: 3000 });
+      }
+    });
+
+    // 3. Load AI Recommendations with explicit loading state
+    this.loadAiRecommendations(studentId);
+  }
+
+  loadAiRecommendations(studentId: number): void {
+    this.loadingAi = true;
+    this.internshipService.getAiRecommended(studentId).subscribe({
+      next: (recs) => {
+        this.aiRecommendations = recs || [];
+        this.loadingAi = false;
+      },
+      error: (err) => {
+        console.error('AI Recommendation Error:', err);
+        this.aiRecommendations = [];
+        this.loadingAi = false;
       }
     });
   }
@@ -114,23 +123,23 @@ export class InternshipsComponent implements OnInit {
     return this.studentApplications.has(internshipId);
   }
 
-  applyNow(internship: InternshipResponse): void {
+  applyNow(internshipId: number, internshipName: string): void {
     const studentId = this.authService.getStudentId();
     if (!studentId) return;
 
-    this.applyingMap.set(internship.internshipId, true);
+    this.applyingMap.set(internshipId, true);
 
-    this.applicationService.applyForInternship(internship.internshipId, studentId).subscribe({
+    this.applicationService.applyForInternship(internshipId, studentId).subscribe({
       next: (app) => {
-        this.applyingMap.set(internship.internshipId, false);
-        this.studentApplications.set(internship.internshipId, app);
-        this.snackBar.open(`Successfully applied to "${internship.name}"!`, 'Close', {
+        this.applyingMap.set(internshipId, false);
+        this.studentApplications.set(internshipId, app);
+        this.snackBar.open(`Successfully applied to "${internshipName}"!`, 'Close', {
           duration: 4000,
           panelClass: ['bg-success', 'text-white']
         });
       },
       error: (err) => {
-        this.applyingMap.set(internship.internshipId, false);
+        this.applyingMap.set(internshipId, false);
         const msg = err.error?.message || 'Failed to submit application. Please try again.';
         this.snackBar.open(msg, 'Close', { duration: 4000 });
       }

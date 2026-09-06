@@ -23,3 +23,14 @@ export interface InternshipResponse {
   aiRecommended?: boolean;
   matchScore?: number;
 }
+
+export interface AiRecommendationResponse {
+  internshipId: number;
+  internshipName: string;
+  description: string;
+  companyName: string;
+  start: string;
+  technologies: TechnologyResponse[];
+  matchPercentage: number;
+  reason: string;
+}

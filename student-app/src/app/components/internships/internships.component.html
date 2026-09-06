@@ -4,7 +4,7 @@
 
   <!-- Main Content Area -->
   <main class="main-content">
-    
+
     <!-- Title & Top Info -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
       <div>
@@ -16,7 +16,7 @@
     <!-- Main Table Card (Clean White) -->
     <div class="table-card p-4">
       <mat-tab-group animationDuration="200ms">
-        
+
         <!-- TAB 1: ALL INTERNSHIPS -->
         <mat-tab>
           <ng-template mat-tab-label>
@@ -29,7 +29,8 @@
             <div class="d-flex justify-content-end mb-3">
               <div class="input-group" style="max-width: 380px;">
                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" (keyup)="applyFilter($event)" class="form-control border-start-0 ps-0" placeholder="Search internships...">
+                <input type="text" (keyup)="applyFilter($event)" class="form-control border-start-0 ps-0"
+                  placeholder="Search internships...">
               </div>
             </div>
 
@@ -48,7 +49,8 @@
                   <th mat-header-cell *matHeaderCellDef> Internship Title </th>
                   <td mat-cell *matCellDef="let element">
                     <span class="fw-bold text-dark d-block">{{ element.name }}</span>
-                    <small class="text-muted text-truncate d-block" style="max-width: 280px;">{{ element.description }}</small>
+                    <small class="text-muted text-truncate d-block" style="max-width: 280px;">{{ element.description
+                      }}</small>
                   </td>
                 </ng-container>
 
@@ -73,7 +75,8 @@
                   <th mat-header-cell *matHeaderCellDef> Technologies </th>
                   <td mat-cell *matCellDef="let element">
                     <div class="d-flex flex-wrap gap-1">
-                      <span *ngFor="let tech of element.technologies" class="badge" style="background-color: #eaf6f7; color: #257b84; font-weight: 500; font-size: 0.82rem; padding: 4px 8px; border-radius: 6px;">
+                      <span *ngFor="let tech of element.technologies" class="badge"
+                        style="background-color: #eaf6f7; color: #257b84; font-weight: 500; font-size: 0.82rem; padding: 4px 8px; border-radius: 6px;">
                         {{ tech.name }}
                       </span>
                     </div>
@@ -85,13 +88,16 @@
                   <th mat-header-cell *matHeaderCellDef class="text-center"> Status </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
                     <ng-container *ngIf="hasApplied(element.internshipId); else notApplied">
-                      <span *ngIf="getApplication(element.internshipId)?.status === 'ACCEPTED'" class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1">
+                      <span *ngIf="getApplication(element.internshipId)?.status === 'ACCEPTED'"
+                        class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-1">
                         ACCEPTED
                       </span>
-                      <span *ngIf="getApplication(element.internshipId)?.status === 'REJECTED'" class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-3 py-1">
+                      <span *ngIf="getApplication(element.internshipId)?.status === 'REJECTED'"
+                        class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle px-3 py-1">
                         REJECTED
                       </span>
-                      <span *ngIf="getApplication(element.internshipId)?.status === 'PENDING'" class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-1">
+                      <span *ngIf="getApplication(element.internshipId)?.status === 'PENDING'"
+                        class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-1">
                         PENDING
                       </span>
                     </ng-container>
@@ -106,18 +112,14 @@
                   <th mat-header-cell *matHeaderCellDef class="text-center"> Action </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
                     <!-- Apply Icon Button -->
-                    <button *ngIf="!hasApplied(element.internshipId)" 
-                            class="action-icon"
-                            [disabled]="applyingMap.get(element.internshipId)"
-                            (click)="applyNow(element)"
-                            title="Apply for Internship">
+                    <button *ngIf="!hasApplied(element.internshipId)" class="action-icon"
+                      [disabled]="applyingMap.get(element.internshipId)"
+                      (click)="applyNow(element.internshipId, element.name)" title="Apply for Internship">
                       <i class="bi bi-send fs-5"></i>
                     </button>
                     <!-- Already Applied Disabled Icon Button -->
-                    <button *ngIf="hasApplied(element.internshipId)" 
-                            class="action-icon opacity-50" 
-                            disabled 
-                            title="Already Applied">
+                    <button *ngIf="hasApplied(element.internshipId)" class="action-icon opacity-50" disabled
+                      title="Already Applied">
                       <i class="bi bi-check-lg fs-4 text-success"></i>
                     </button>
                   </td>
@@ -158,53 +160,74 @@
               </div>
             </div>
 
-            <div *ngIf="aiRecommendations && aiRecommendations.length > 0; else noRecs" class="row g-4">
-              <div *ngFor="let rec of aiRecommendations" class="col-md-6 col-lg-4">
-                <div class="table-card p-3 h-100 d-flex flex-column border">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <span class="badge" style="background-color: #eaf6f7; color: #257b84;">
-                      <i class="bi bi-stars me-1"></i> AI Match
-                    </span>
-                    <small class="text-muted">{{ rec.company ? rec.company.name : '' }}</small>
-                  </div>
+            <!-- Loading Spinner for AI Tab -->
+            <div *ngIf="loadingAi" class="text-center py-5">
+              <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+              <p class="text-teal fw-bold mt-3 mb-1 fs-6">
+                <i class="bi bi-stars me-1"></i> AI is analyzing your CV & profile to find matching internships...
+              </p>
+              <small class="text-muted">Please wait a moment while AI processes the best internship matches for
+                you.</small>
+            </div>
 
-                  <h5 class="fw-bold text-dark mt-2 mb-2">{{ rec.name }}</h5>
-                  <p class="text-muted small mb-3 flex-grow-1" style="min-height: 48px;">{{ rec.description }}</p>
+            <!-- Recommendations List (Cards Display) -->
+            <div *ngIf="!loadingAi">
+              <div *ngIf="aiRecommendations && aiRecommendations.length > 0; else noRecs" class="row g-4">
+                <div *ngFor="let rec of aiRecommendations" class="col-md-6 col-lg-4">
+                  <div class="table-card p-3 h-100 d-flex flex-column border shadow-sm">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <span class="badge" style="background-color: #eaf6f7; color: #257b84; font-size: 0.85rem;">
+                        <i class="bi bi-stars me-1"></i> {{ (rec.matchPercentage * 100) | number:'1.0-0' }}% Match
+                      </span>
+                      <small class="text-muted fw-semibold">{{ rec.companyName }}</small>
+                    </div>
 
-                  <div class="mb-3">
-                    <div class="d-flex flex-wrap gap-1">
-                      <span *ngFor="let tech of rec.technologies" class="badge" style="background-color: #f1f5f9; color: #475569;">
-                        {{ tech.name }}
+                    <h5 class="fw-bold text-dark mt-2 mb-1">{{ rec.internshipName }}</h5>
+                    <p class="text-muted small mb-2 flex-grow-1">{{ rec.description }}</p>
+
+                    <!-- AI Recommendation Reason -->
+                    <div *ngIf="rec.reason"
+                      class="p-2 mb-3 rounded-2 bg-light text-dark small border-start border-3 border-teal">
+                      <i class="bi bi-info-circle me-1 text-teal"></i>
+                      <em>{{ rec.reason }}</em>
+                    </div>
+
+                    <div class="mb-3">
+                      <div class="d-flex flex-wrap gap-1">
+                        <span *ngFor="let tech of rec.technologies" class="badge"
+                          style="background-color: #f1f5f9; color: #475569;">
+                          {{ tech.name }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                      <small class="text-muted" *ngIf="rec.start">Starts: {{ rec.start }}</small>
+
+                      <button *ngIf="!hasApplied(rec.internshipId)" class="action-icon"
+                        [disabled]="applyingMap.get(rec.internshipId)"
+                        (click)="applyNow(rec.internshipId, rec.internshipName)" title="Apply for Internship">
+                        <i class="bi bi-send fs-5"></i>
+                      </button>
+                      <span *ngIf="hasApplied(rec.internshipId)"
+                        class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                        Applied
                       </span>
                     </div>
                   </div>
-
-                  <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
-                    <small class="text-muted">{{ rec.startDate }}</small>
-                    
-                    <button *ngIf="!hasApplied(rec.internshipId)" 
-                            class="action-icon"
-                            [disabled]="applyingMap.get(rec.internshipId)"
-                            (click)="applyNow(rec)"
-                            title="Apply for Internship">
-                      <i class="bi bi-send fs-5"></i>
-                    </button>
-                    <span *ngIf="hasApplied(rec.internshipId)" class="badge bg-success-subtle text-success px-3 py-1 rounded-pill">
-                      Applied
-                    </span>
-                  </div>
                 </div>
               </div>
+
+              <ng-template #noRecs>
+                <div class="text-center py-5 text-muted">
+                  <i class="bi bi-stars display-4 text-muted opacity-50 d-block mb-2"></i>
+                  <h5>No AI recommendations available yet</h5>
+                  <p class="small">Add technologies to your CV to get instant AI internship recommendations!</p>
+                  <button class="btn btn-teal btn-sm rounded-3 mt-2" routerLink="/cv">Update My CV</button>
+                </div>
+              </ng-template>
             </div>
 
-            <ng-template #noRecs>
-              <div class="text-center py-5 text-muted">
-                <i class="bi bi-stars display-4 text-muted opacity-50 d-block mb-2"></i>
-                <h5>No AI recommendations available yet</h5>
-                <p class="small">Add technologies to your CV to get instant AI internship recommendations!</p>
-                <button class="btn btn-teal btn-sm rounded-3 mt-2" routerLink="/cv">Update My CV</button>
-              </div>
-            </ng-template>
           </div>
         </mat-tab>
 
